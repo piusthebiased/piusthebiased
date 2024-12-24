@@ -1,5 +1,6 @@
 ## Hi there 👋
 
+You can contact me at [cs@plee.app](mailto:cs@plee.app).
 <!--
 **piusthebiased/piusthebiased** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
