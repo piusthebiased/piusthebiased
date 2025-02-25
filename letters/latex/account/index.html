@@ -1,0 +1,88 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- search meta -->
+    <title>account.cls</title>
+    <meta name="description" content="Notes and Letters with respect to my self studies.">
+    <link rel="canonical" href="https://plee.app/letters">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- page styling -->
+    <style>
+      body { 
+        line-height: 1.4;
+        font-size: 16px;
+        padding: 0 10px;
+        margin: 50px auto;
+        max-width: 650px;
+        font-family: monospace;
+      }
+  
+      #maincontent {
+        max-width:42em;margin:15 auto;
+        font-family: monospace;
+      }
+
+      ::selection {
+        background-color: black;
+        color: white;
+      }
+
+      ::-moz-selection {
+        background-color: black;
+        color: white;
+      }
+
+      .image-container {
+        text-align: center; /* Centers content */
+        margin-top: 5px; /* Adds spacing from top */
+      }
+
+      .image-container img {
+        border: 3px solid black; /* Adds a black border */
+        border-radius: 10px; /* Optional: Rounds edges */
+        max-width: 95%; /* Ensures responsiveness */
+        height: auto;
+      }
+
+      .caption {
+        margin-top: 5px;
+        font-size: 16px;
+        color: #333; /* Dark gray for readability */
+        font-style: italic;
+      }
+    </style>
+  </head>
+  
+  <body><div id="maincontent" style="margin-top:70px">
+    <h2 style="margin-bottom:2px;">account.cls</h2>
+    <a href="https://plee.app/letters/latex/account/account.cls"><b>February 24th, 2025</b> — account.cls</a>
+
+    <div class="image-container">
+        <div class="caption"><b>Fig 1.</b> Output of the sample usage of <b>account.cls</b>. </div>
+        <img src="page.jpg" alt="Image of the output">
+    </div>
+
+    <p>Recently (about a week ago), I visited NYC, Virginia, and  DC for many purposes, including raising money for a partnership. Consequently, I've incurred many business expenses that I had to deduct. While settling balances and accounts, I found that I needed to write a bunch of invoices. This simple, 73-line package helps consolidate expenses into a simple box that emulates a reciept.</p>
+    <p>There are some floating point errors, but LaTeX has limited support for arithmetic. I plan on fixing this in the future&trade;. Below is a sample usage of this class. The output of this snippet can be found <a href="https://plee.app/letters/latex/account/preview.pdf">here</a>.</p>
+    <!-- HTML generated using hilite.me -->
+<div style="background: #f8f8f8; overflow:auto;width:auto;border:solid black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #AA22FF; font-weight: bold">\begin</span><span style="color: #AA22FF">{</span>expense<span style="color: #AA22FF">}{</span>Gaylord National Marketplace, 214956 Sokha<span style="color: #AA22FF">}</span>
+    <span style="color: #AA22FF; font-weight: bold">\textbf</span><span style="color: #AA22FF">{</span>Check Number:<span style="color: #AA22FF">}</span> CHK 8215<span style="color: #AA22FF; font-weight: bold">\\</span>
+    <span style="color: #AA22FF; font-weight: bold">\textbf</span><span style="color: #AA22FF">{</span>Date:<span style="color: #AA22FF">}</span> 20 February 2025, 11:01 AM<span style="color: #AA22FF; font-weight: bold">\\</span>
+    <span style="color: #AA22FF; font-weight: bold">\begin</span><span style="color: #AA22FF">{</span>complist<span style="color: #AA22FF">}</span>[0.06]
+        <span style="color: #AA22FF; font-weight: bold">\comp</span><span style="color: #AA22FF">{</span>STRBX FRAP MOCHA<span style="color: #AA22FF">}{</span>6.00<span style="color: #AA22FF">}</span>
+        <span style="color: #AA22FF; font-weight: bold">\comp</span><span style="color: #AA22FF">{</span>CROISSANT CHOCOLATE<span style="color: #AA22FF">}{</span>4.00<span style="color: #AA22FF">}</span>
+        <span style="color: #AA22FF; font-weight: bold">\comp</span><span style="color: #AA22FF">{</span>CROISSANT CHOCOLATE<span style="color: #AA22FF">}{</span>4.00<span style="color: #AA22FF">}</span>
+    <span style="color: #AA22FF; font-weight: bold">\end</span><span style="color: #AA22FF">{</span>complist<span style="color: #AA22FF">}</span>
+    <span style="color: #AA22FF; font-weight: bold">\textbf</span><span style="color: #AA22FF">{</span>Paid with Mastercard ending in 9325.<span style="color: #AA22FF">}</span>
+<span style="color: #AA22FF; font-weight: bold">\end</span><span style="color: #AA22FF">{</span>expense<span style="color: #AA22FF">}</span>
+</pre></td></tr></table></div>
+</div></body>
+</html>
