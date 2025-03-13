@@ -1,0 +1,193 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- search meta -->
+    <title>XAU / XAUT-PAXG Stationarity Analysis</title>
+    <meta name="description" content="Notes and Letters with respect to my self studies.">
+    <link rel="canonical" href="https://plee.app/letters/quant/goldxautpaxg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- page styling -->
+    <style>
+      body { 
+        line-height: 1.4;
+        font-size: 16px;
+        padding: 0 10px;
+        margin: 50px auto;
+        max-width: 650px;
+        font-family: monospace;
+      }
+
+      h3 {
+        margin-bottom: 0px;
+      }
+  
+      #maincontent {
+        max-width:42em;margin:15 auto;
+        font-family: monospace;
+      }
+
+      ::selection {
+        background-color: black;
+        color: white;
+      }
+
+      ::-moz-selection {
+        background-color: black;
+        color: white;
+      }
+
+      .image-container {
+        text-align: center; /* Centers content */
+        margin-top: 5px; /* Adds spacing from top */
+      }
+
+      .image-container img {
+        border: 1px solid black; /* Adds a black border */
+        border-radius: 2px; /* Optional: Rounds edges */
+        max-width: 95%; /* Ensures responsiveness */
+        height: auto;
+      }
+
+      .caption {
+        margin-top: 5px;
+        font-size: 16px;
+        color: #333; /* Dark gray for readability */
+        font-style: italic;
+      }
+    </style>
+  </head>
+  
+  <body><div id="maincontent" style="margin-top:70px">
+    <h2 style="margin-bottom:2px;">XAU / PAXG-XAUT Pairs Stationarity Analysis</h2>
+    <p>This notebook will provide arbitrage indications for spot to asset-backed cryptocurrency pairs.  In particular, the XAUt/USDt and PAXG/USDt pairs will be analyzed against spot gold - taking advantage of low volume pair trading.  In addition, this notebook will aim to run statistical tests to identify stationarity and mean reversion.</p>
+
+    <h3>Data Consolidation</h3>
+    <p>Create a helper function to fetch the data from the <i>pyth</i> price oracle.</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3
+4</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-style: italic"># fetch data from the &#39;pyth&#39; price oracle.</span>
+<span style="color: #AA22FF; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">requests</span> <span style="color: #AA22FF; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">req</span>
+<span style="color: #AA22FF; font-weight: bold">def</span> <span style="color: #00A000">getBarsPyth</span>(symbol, resolution, start, end):
+  <span style="color: #AA22FF; font-weight: bold">return</span> req<span style="color: #666666">.</span>get(<span style="color: #BB4444">&quot;https://benchmarks.pyth.network/v1/shims/tradingview/history?symbol={0}&amp;resolution={1}&amp;from={2}&amp;to={3}&quot;</span><span style="color: #666666">.</span>format(symbol, resolution, start, end))<span style="color: #666666">.</span>json()
+</pre></td></tr></table></div>
+
+    <p>Fetch bars as objects from the helper function oracle for <b>XAU/USD</b>, <b>XAUt/USD</b>, <b>PAXG/USD</b>.  Ensure that the start date is further than <i>2023-12-04</i> (listing date of XAUt) and is not a weekend (as XAU/USD does not trade on weekends).</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3
+4
+5
+6
+7
+8
+9</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-style: italic"># fetch bars as JSON objecobject</span>
+<span style="color: #AA22FF; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">time</span>
+<span style="color: #AA22FF; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">datetime</span> <span style="color: #AA22FF; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">dt</span>
+
+interval <span style="color: #666666">=</span> <span style="color: #666666">60</span> <span style="color: #008800; font-style: italic"># default = 60</span>
+start, end <span style="color: #666666">=</span> dt<span style="color: #666666">.</span>date(<span style="color: #666666">2024</span>, <span style="color: #666666">1</span>, <span style="color: #666666">4</span>), dt<span style="color: #666666">.</span>date<span style="color: #666666">.</span>today() <span style="color: #008800; font-style: italic"># default = 1/4/2024 -&gt; today</span>
+XAU <span style="color: #666666">=</span> getBarsPyth(<span style="color: #BB4444">&quot;Metal.XAU%2FUSD&quot;</span>, interval, <span style="color: #AA22FF">int</span>(time<span style="color: #666666">.</span>mktime(start<span style="color: #666666">.</span>timetuple())), <span style="color: #AA22FF">int</span>(time<span style="color: #666666">.</span>mktime(end<span style="color: #666666">.</span>timetuple())))
+XAUT <span style="color: #666666">=</span> getBarsPyth(<span style="color: #BB4444">&quot;Crypto.XAUT%2FUSD&quot;</span>, interval, <span style="color: #AA22FF">int</span>(time<span style="color: #666666">.</span>mktime(start<span style="color: #666666">.</span>timetuple())), <span style="color: #AA22FF">int</span>(time<span style="color: #666666">.</span>mktime(end<span style="color: #666666">.</span>timetuple())))
+PAXG <span style="color: #666666">=</span> getBarsPyth(<span style="color: #BB4444">&quot;Crypto.PAXG%2FUSD&quot;</span>, interval, <span style="color: #AA22FF">int</span>(time<span style="color: #666666">.</span>mktime(start<span style="color: #666666">.</span>timetuple())), <span style="color: #AA22FF">int</span>(time<span style="color: #666666">.</span>mktime(end<span style="color: #666666">.</span>timetuple())))
+</pre></td></tr></table></div>
+    
+  <h3>Data Cleaning</h3>
+  <p>With the dataset from <i>pyth</i>, place the datasets into a dictionary to then be merged into one DataFrame, using time (in UNIX) as an index.</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-style: italic"># create timeseries as dict</span>
+<span style="color: #AA22FF; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">pandas</span> <span style="color: #AA22FF; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">pd</span>
+<span style="color: #AA22FF; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">matplotlib.pyplot</span> <span style="color: #AA22FF; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">plt</span>
+
+xau_pair <span style="color: #666666">=</span> {<span style="color: #BB4444">&#39;t&#39;</span>: XAU[<span style="color: #BB4444">&#39;t&#39;</span>], <span style="color: #BB4444">&#39;c_xau&#39;</span>: XAU[<span style="color: #BB4444">&#39;c&#39;</span>]}
+xaut_pair <span style="color: #666666">=</span> {<span style="color: #BB4444">&#39;t&#39;</span>: XAUT[<span style="color: #BB4444">&#39;t&#39;</span>], <span style="color: #BB4444">&#39;c_xaut&#39;</span>: XAUT[<span style="color: #BB4444">&#39;c&#39;</span>]}
+paxg_pair <span style="color: #666666">=</span> {<span style="color: #BB4444">&#39;t&#39;</span>: PAXG[<span style="color: #BB4444">&#39;t&#39;</span>], <span style="color: #BB4444">&#39;c_paxg&#39;</span>: PAXG[<span style="color: #BB4444">&#39;c&#39;</span>]}
+
+<span style="color: #008800; font-style: italic"># merge data into dataframe (data)</span>
+df1, df2, df3 <span style="color: #666666">=</span> pd<span style="color: #666666">.</span>DataFrame(xau_pair), pd<span style="color: #666666">.</span>DataFrame(xaut_pair), pd<span style="color: #666666">.</span>DataFrame(paxg_pair)
+df1<span style="color: #666666">.</span>set_index(<span style="color: #BB4444">&#39;t&#39;</span>, inplace<span style="color: #666666">=</span><span style="color: #AA22FF; font-weight: bold">True</span>)
+df2<span style="color: #666666">.</span>set_index(<span style="color: #BB4444">&#39;t&#39;</span>, inplace<span style="color: #666666">=</span><span style="color: #AA22FF; font-weight: bold">True</span>)
+df3<span style="color: #666666">.</span>set_index(<span style="color: #BB4444">&#39;t&#39;</span>, inplace<span style="color: #666666">=</span><span style="color: #AA22FF; font-weight: bold">True</span>)
+merged <span style="color: #666666">=</span> pd<span style="color: #666666">.</span>concat([df1, df2, df3], axis<span style="color: #666666">=1</span>, join<span style="color: #666666">=</span><span style="color: #BB4444">&#39;outer&#39;</span>)
+merged<span style="color: #666666">.</span>sort_values(by<span style="color: #666666">=</span><span style="color: #BB4444">&#39;t&#39;</span>, inplace<span style="color: #666666">=</span><span style="color: #AA22FF; font-weight: bold">True</span>)
+merged <span style="color: #666666">=</span> merged<span style="color: #666666">.</span>reset_index()
+merged[<span style="color: #BB4444">&#39;time&#39;</span>] <span style="color: #666666">=</span> pd<span style="color: #666666">.</span>to_datetime(merged[<span style="color: #BB4444">&#39;t&#39;</span>],unit<span style="color: #666666">=</span><span style="color: #BB4444">&#39;s&#39;</span>)
+merged <span style="color: #666666">=</span> merged<span style="color: #666666">.</span>set_index(<span style="color: #BB4444">&#39;t&#39;</span>)
+data <span style="color: #666666">=</span> merged
+</pre></td></tr></table></div>
+   
+  <p>Normalize XAU, XAUt, and PAXG by taking the percent difference of the closing price of each bar.</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3
+4</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-style: italic"># adjust for price difference, normalize with pct change</span>
+data[<span style="color: #BB4444">&#39;pct_c_xau&#39;</span>] <span style="color: #666666">=</span> (data[<span style="color: #BB4444">&#39;c_xau&#39;</span>] <span style="color: #666666">/</span> data[<span style="color: #BB4444">&#39;c_xau&#39;</span>]<span style="color: #666666">.</span>iloc[<span style="color: #666666">0</span>] <span style="color: #666666">-</span> <span style="color: #666666">1</span>) <span style="color: #666666">*</span> <span style="color: #666666">100</span>
+data[<span style="color: #BB4444">&#39;pct_c_xaut&#39;</span>] <span style="color: #666666">=</span> (data[<span style="color: #BB4444">&#39;c_xaut&#39;</span>] <span style="color: #666666">/</span> data[<span style="color: #BB4444">&#39;c_xaut&#39;</span>]<span style="color: #666666">.</span>iloc[<span style="color: #666666">0</span>] <span style="color: #666666">-</span> <span style="color: #666666">1</span>) <span style="color: #666666">*</span> <span style="color: #666666">100</span>
+data[<span style="color: #BB4444">&#39;pct_c_paxg&#39;</span>] <span style="color: #666666">=</span> (data[<span style="color: #BB4444">&#39;c_paxg&#39;</span>] <span style="color: #666666">/</span> data[<span style="color: #BB4444">&#39;c_paxg&#39;</span>]<span style="color: #666666">.</span>iloc[<span style="color: #666666">0</span>] <span style="color: #666666">-</span> <span style="color: #666666">1</span>) <span style="color: #666666">*</span> <span style="color: #666666">100</span>
+</pre></td></tr></table></div>
+
+  <p>Calculate the spread of each datapoint with respect to XAU (w/ a XAUt-PAXG spread).</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3
+4
+5
+6
+7
+8
+9</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-style: italic"># spread</span>
+data[<span style="color: #BB4444">&#39;pct_c_xau_interpolated&#39;</span>] <span style="color: #666666">=</span> data[<span style="color: #BB4444">&#39;pct_c_xau&#39;</span>]<span style="color: #666666">.</span>interpolate(method<span style="color: #666666">=</span><span style="color: #BB4444">&#39;linear&#39;</span>)
+gold_i, paxg_i, xaut_i <span style="color: #666666">=</span> data[<span style="color: #BB4444">&#39;pct_c_xau_interpolated&#39;</span>], data[<span style="color: #BB4444">&#39;pct_c_paxg&#39;</span>], data[<span style="color: #BB4444">&#39;pct_c_xaut&#39;</span>]
+aligned_goldGP, aligned_paxgGP <span style="color: #666666">=</span> gold_i<span style="color: #666666">.</span>align(paxg_i, join<span style="color: #666666">=</span><span style="color: #BB4444">&#39;outer&#39;</span>)
+aligned_goldGX, aligned_xautGX <span style="color: #666666">=</span> gold_i<span style="color: #666666">.</span>align(xaut_i, join<span style="color: #666666">=</span><span style="color: #BB4444">&#39;outer&#39;</span>)
+aligned_paxgPX, aligned_xautPX <span style="color: #666666">=</span> paxg_i<span style="color: #666666">.</span>align(xaut_i, join<span style="color: #666666">=</span><span style="color: #BB4444">&#39;outer&#39;</span>)
+data[<span style="color: #BB4444">&#39;spread_xaupaxg&#39;</span>] <span style="color: #666666">=</span> aligned_goldGP <span style="color: #666666">-</span> aligned_paxgGP
+data[<span style="color: #BB4444">&#39;spread_xauxaut&#39;</span>] <span style="color: #666666">=</span> aligned_goldGX <span style="color: #666666">-</span> aligned_xautGX
+data[<span style="color: #BB4444">&#39;spread_xautpaxg&#39;</span>] <span style="color: #666666">=</span> aligned_xautPX <span style="color: #666666">-</span> aligned_paxgPX
+</pre></td></tr></table></div>
+
+  <h3>Data Analysis</h3>
+  <p>Let us plot the graph of PAXG, XAUt, and XAU - both raw and normalized; additionally plot the correlation of PAXG and XAUt with respect to XAU.</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3
+4
+5
+6</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-style: italic"># graph of percent changes of gold, xaut, and paxg</span>
+fig, axes <span style="color: #666666">=</span> plt<span style="color: #666666">.</span>subplots(nrows<span style="color: #666666">=2</span>, ncols<span style="color: #666666">=2</span>)
+data<span style="color: #666666">.</span>loc[:,[<span style="color: #BB4444">&#39;c_xau&#39;</span>, <span style="color: #BB4444">&#39;c_xaut&#39;</span>, <span style="color: #BB4444">&#39;c_paxg&#39;</span>, <span style="color: #BB4444">&#39;time&#39;</span>]]<span style="color: #666666">.</span>plot(x <span style="color: #666666">=</span> <span style="color: #BB4444">&#39;time&#39;</span>, ax<span style="color: #666666">=</span>axes[<span style="color: #666666">0</span>,<span style="color: #666666">0</span>])
+data<span style="color: #666666">.</span>loc[:,[<span style="color: #BB4444">&#39;pct_c_xau&#39;</span>, <span style="color: #BB4444">&#39;pct_c_xaut&#39;</span>, <span style="color: #BB4444">&#39;pct_c_paxg&#39;</span>, <span style="color: #BB4444">&#39;time&#39;</span>]]<span style="color: #666666">.</span>plot(x <span style="color: #666666">=</span> <span style="color: #BB4444">&#39;time&#39;</span>, ax<span style="color: #666666">=</span>axes[<span style="color: #666666">0</span>,<span style="color: #666666">1</span>])
+data<span style="color: #666666">.</span>plot(kind<span style="color: #666666">=</span><span style="color: #BB4444">&#39;scatter&#39;</span>, x<span style="color: #666666">=</span><span style="color: #BB4444">&#39;c_xau&#39;</span>, y<span style="color: #666666">=</span><span style="color: #BB4444">&#39;c_xaut&#39;</span>, s<span style="color: #666666">=16</span>, alpha<span style="color: #666666">=0.4</span>, ax<span style="color: #666666">=</span>axes[<span style="color: #666666">1</span>,<span style="color: #666666">0</span>])
+data<span style="color: #666666">.</span>plot(kind<span style="color: #666666">=</span><span style="color: #BB4444">&#39;scatter&#39;</span>, x<span style="color: #666666">=</span><span style="color: #BB4444">&#39;c_xau&#39;</span>, y<span style="color: #666666">=</span><span style="color: #BB4444">&#39;c_paxg&#39;</span>, s<span style="color: #666666">=16</span>, alpha<span style="color: #666666">=0.4</span>, ax<span style="color: #666666">=</span>axes[<span style="color: #666666">1</span>,<span style="color: #666666">1</span>])
+</pre></td></tr></table></div>
+  
+  <div class="image-container">
+    <div class="caption">&lt;AxesSubplot: xlabel='c_xau', ylabel='c_paxg'&gt;</div>
+    <img src="https://plee.app/letters/quant/goldxautpaxg/fig1.png" alt="Image of the output">
+  </div>
+    
+
+  </div></body>
+</html>
