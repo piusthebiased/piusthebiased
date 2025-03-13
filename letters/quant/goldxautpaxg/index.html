@@ -1,9 +1,14 @@
+<!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- search meta -->
     <title>XAU / XAUT-PAXG Stationarity Analysis</title>
     <meta name="description" content="Notes and Letters with respect to my self studies.">
     <link rel="canonical" href="https://plee.app/letters/quant/goldxautpaxg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" integrity="sha384-zh0CIslj+VczCZtlzBcjt5ppRcsAmDnRem7ESsYwWwg3m/OaJ2l4x7YBZl9Kxxib" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js" integrity="sha384-Rma6DA2IPUwhNxmrB/7S3Tno0YY7sFu9WSYMCuulLhIqYSGZ2gKCJWIqhBWqMQfh" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
     
     <!-- page styling -->
     <style>
@@ -35,6 +40,10 @@
         color: white;
       }
 
+      .eq1 {
+        text-align: center;
+      }
+
       .image-container {
         text-align: center; /* Centers content */
         margin-top: 5px; /* Adds spacing from top */
@@ -43,15 +52,21 @@
       .image-container img {
         border: 1px solid black; /* Adds a black border */
         border-radius: 2px; /* Optional: Rounds edges */
-        max-width: 95%; /* Ensures responsiveness */
+        margin-bottom: 10px;
+        width: 100%; /* Ensures responsiveness */
         height: auto;
       }
 
       .caption {
         margin-top: 5px;
-        font-size: 16px;
+        font-size: 12px;
         color: #333; /* Dark gray for readability */
-        font-style: italic;
+        text-align: left;
+        margin-bottom:5px;
+      }
+
+      pre {
+        display: inline;
       }
     </style>
   </head>
@@ -187,7 +202,141 @@ data<span style="color: #666666">.</span>plot(kind<span style="color: #666666">=
     <div class="caption">&lt;AxesSubplot: xlabel='c_xau', ylabel='c_paxg'&gt;</div>
     <img src="https://plee.app/letters/quant/goldxautpaxg/fig1.png" alt="Image of the output">
   </div>
-    
 
-  </div></body>
-</html>
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1</pre></td><td><pre style="margin: 0; line-height: 125%">data<span style="color: #666666">.</span>loc[:,[<span style="color: #BB4444">&#39;pct_c_xau&#39;</span>, <span style="color: #BB4444">&#39;pct_c_xaut&#39;</span>, <span style="color: #BB4444">&#39;pct_c_paxg&#39;</span>, <span style="color: #BB4444">&#39;time&#39;</span>]]<span style="color: #666666">.</span>plot(x <span style="color: #666666">=</span> <span style="color: #BB4444">&#39;time&#39;</span>)
+</pre></td></tr></table></div>
+
+  <div class="image-container">
+    <div class="caption">&lt;AxesSubplot: xlabel='time'&gt;</div>
+    <img src="https://plee.app/letters/quant/goldxautpaxg/fig2.png" alt="Image of the output">
+  </div>
+
+  <p>Analytically, we can show that XAU, XAUt, and PAXG all exhibit strong correlation. Since these datasets are meant to be directly proportional to each other, <i>any variation we exhibit in this dataset is a theoretical risk-free profit</i>. However, before we put these claims into practice, let us perform statistical tests to prove direct proportionality, stationarity, and mean reversion.</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #AA22FF">print</span>(data<span style="color: #666666">.</span>loc[:,[<span style="color: #BB4444">&#39;c_xau&#39;</span>, <span style="color: #BB4444">&#39;c_xaut&#39;</span>, <span style="color: #BB4444">&#39;c_paxg&#39;</span>]]<span style="color: #666666">.</span>corr())
+</pre></td></tr></table></div>
+
+  <div class="caption">
+    <pre>         c_xau        c_xaut       c_paxg</pre><br>
+    <pre>c_xau    1.000000     0.998364     0.964174</pre><br>
+    <pre>c_xaut   0.998364     1.000000     0.971587</pre><br>
+    <pre>c_paxg   0.964174     0.971587     1.000000</pre><br>
+  </div>
+
+  <p>As this DataFrame is from January to Mid-May, on the assumption that this data isn't mean reverting [1], the expected loss for an unleveraged portfolio would be the spread between XAUt and PAXG. However, we see a <b>strong positive correlation</b>.  To take advantage of spread trading, let us create three datasets - the spread between XAUt, PAXG w/ respect to XAU, and a XAUt-PAXG spread.</p>
+  <p>[1] A mean reverting series is a group of data that retains 'memory' - as a series deviate from a given mean, it tends to traverse back to the mean (hence 'reverting').</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3</pre></td><td><pre style="margin: 0; line-height: 125%">graph <span style="color: #666666">=</span> data<span style="color: #666666">.</span>copy()
+graph[<span style="color: #BB4444">&#39;root&#39;</span>] <span style="color: #666666">=</span> aligned_goldGP <span style="color: #666666">-</span> aligned_goldGP <span style="color: #008800; font-style: italic"># this is such a bad way to initialize all zero values.</span>
+graph<span style="color: #666666">.</span>loc[:,[<span style="color: #BB4444">&#39;spread_xaupaxg&#39;</span>, <span style="color: #BB4444">&#39;spread_xauxaut&#39;</span>, <span style="color: #BB4444">&#39;spread_xautpaxg&#39;</span>, <span style="color: #BB4444">&#39;root&#39;</span>, <span style="color: #BB4444">&#39;time&#39;</span>]]<span style="color: #666666">.</span>plot(x <span style="color: #666666">=</span> <span style="color: #BB4444">&#39;time&#39;</span>)
+</pre></td></tr></table></div>
+
+  <div class="image-container">
+    <div class="caption">&lt;AxesSubplot: xlabel='time'&gt;</div>
+    <img src="https://plee.app/letters/quant/goldxautpaxg/fig3.png" alt="Image of the output">
+  </div>
+
+  <p>In a completely efficient market, we should expect absolutely no deviation in price - however that doesn't exist (I hate economists).  To create a profit in this situation, one would short the base currency and long the trading currency (or vice versa, depending on the direction of the spread). To prove that this is truly risk-free, we must demonstrate that the PAXG, XAUT pair spreads exhibit mean reversion. A continuous mean-reverting time series can be represented by an Ornstein-Uhlenbeck stochastic differential equation:</p>
+  <div class="eq1">\(dx_t = \theta (\mu - x_t) dt + \sigma dW_t\)</div>
+  <p>Where \(\theta\) is the rate of reversion to the mean, \(\mu\) is the mean value of the process, \(\sigma\) is the variance of the process, and \(W_t\) is a Wiener Process or a Brownian Motion. In a discrete setting, the equation states that the change of the price series in the next time period is <b>proportional</b> to the difference between the mean price and the current price, with the addition of Gaussian noise. This motivates the Augmented Dickey-Fuller Test, which we will describe below.</p>
+
+  <h3>Augmented Dickey-Fuller Test</h3>
+  <p>A <b>unit root</b> is a stochastic trend in a given series. The point of an Augmented Dickey-Fuller Test is to determine whether or not a unit root exists; if it does not exist, the series is not trending. As a result, a higher score in the Dickey-Fuller test indicates that there's a more prominent trend, and vice versa.</p>
+  
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3
+4
+5
+6
+7
+8</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #AA22FF; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">statsmodels.tsa.stattools</span> <span style="color: #AA22FF; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">ts</span>
+adf_xauxaut <span style="color: #666666">=</span> ts<span style="color: #666666">.</span>adfuller(data[<span style="color: #BB4444">&#39;spread_xauxaut&#39;</span>], <span style="color: #666666">1</span>) <span style="color: #008800; font-style: italic"># perform adf on xau-xaut</span>
+adf_xaupaxg <span style="color: #666666">=</span> ts<span style="color: #666666">.</span>adfuller(data[<span style="color: #BB4444">&#39;spread_xaupaxg&#39;</span>], <span style="color: #666666">1</span>) <span style="color: #008800; font-style: italic"># perform adf on xau-paxg</span>
+adf_xautpaxg <span style="color: #666666">=</span> ts<span style="color: #666666">.</span>adfuller(data[<span style="color: #BB4444">&#39;spread_xautpaxg&#39;</span>], <span style="color: #666666">1</span>) <span style="color: #008800; font-style: italic"># perform adf on xaut-paxg</span>
+<span style="color: #AA22FF">print</span>(<span style="color: #BB4444">&quot;adfuller for XAU-XAUT: {0}&quot;</span><span style="color: #666666">.</span>format(adf_xauxaut))
+<span style="color: #AA22FF">print</span>(<span style="color: #BB4444">&quot;adfuller for XAU-PAXG: {0}&quot;</span><span style="color: #666666">.</span>format(adf_xaupaxg))
+<span style="color: #AA22FF">print</span>(<span style="color: #BB4444">&quot;adfuller for XAUT-PAXG: {0}&quot;</span><span style="color: #666666">.</span>format(adf_xautpaxg))
+<span style="color: #AA22FF">print</span>(<span style="color: #AA22FF">type</span>(adf_xaupaxg))
+</pre></td></tr></table></div>
+<div class="caption" style="border: 1px solid black; width: 100%; overflow-y: auto; display: inline-block; white-space: nowrap;">
+    adfuller for XAU-XAUT: (-5.424463068477814, 3.0086787067634902e-06, 1, 287, {'1%': -3.453342167806272, '5%': -2.871663828287282, '10%': -2.572164381381345}, -963.8929704620568)<br>
+    adfuller for XAU-PAXG: (-5.735268089050287, 6.460192127149706e-07, 0, 288, {'1%': -3.453261605529366, '5%': -2.87162848654246, '10%': -2.5721455328896603}, -304.917811118788)<br>
+    adfuller for XAUT-PAXG: (-5.729545258695016, 6.649327955430402e-07, 0, 288, {'1%': -3.453261605529366, '5%': -2.87162848654246, '10%': -2.5721455328896603}, -277.07578574419176)<br>
+    &lt;class 'tuple'&gt;
+</div>
+
+<p>The <b>ts.adfuller()</b> API calls for returning a tuple with the following attributes:</p>
+<table border="1">
+    <tr>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>adf : <code>float</code></td>
+      <td>Test statistic</td>
+    </tr>
+    <tr>
+      <td>pvalue: <code>float</code></td>
+      <td>MacKinnon’s approximate p-value based on MacKinnon (1994, 2010)</td>
+    </tr>
+    <tr>
+      <td>usedlag: <code>int</code></td>
+      <td>Number of lags used</td>
+    </tr>
+    <tr>
+      <td>nobs: <code>int</code></td>
+      <td>Number of observations used for the ADF regression and calculation of the critical values</td>
+    </tr>
+    <tr>
+      <td>critical values: <code>dict</code></td>
+      <td>Critical values for the test statistic at the 1%, 5%, and 10% levels. Based on MacKinnon (2010)</td>
+    </tr>
+    <tr>
+      <td>icbest: <code>float</code></td>
+      <td>The maximized information criterion if autolag is not None.</td>
+    </tr>
+</table>  
+<p>As noted in the output [<a href="https://www.statsmodels.org/dev/generated/statsmodels.tsa.stattools.adfuller.html">ref</a>], all of our series have a \(p\)-value lower than \(0.01\), which is promising (we can now reject the null hypothesis of \(\gamma = 1\)). Let us reverify our observation by finding the <i>Hurst Exponent</i>.</p>
+    
+<h3>Hurst Exponent</h3>
+<p>The Hurst exponent (HE) aims to provide us a scalar value that helps us identify the 'memory' of a series (i.e. mean reversion). A series with \(HE &gt; 0.5\) is said to be trending, \(HE = 0.5\) is said to be GBM (random walk), and \(HE &lt; 0.5\) is categorized as mean reverting.</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-style: italic"># create hurst exponent function</span>
+<span style="color: #AA22FF; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">numpy</span> <span style="color: #AA22FF; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">np</span>
+<span style="color: #AA22FF; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">numpy</span> <span style="color: #AA22FF; font-weight: bold">import</span> cumsum, log, polyfit, sqrt, std, subtract
+
+<span style="color: #008800; font-style: italic"># input is numpy array</span>
+<span style="color: #AA22FF; font-weight: bold">def</span> <span style="color: #00A000">hurst</span>(ts):
+    lags <span style="color: #666666">=</span> <span style="color: #AA22FF">range</span>(<span style="color: #666666">2</span>, <span style="color: #666666">100</span>) <span style="color: #008800; font-style: italic"># create the range of lagging values</span>
+    tau <span style="color: #666666">=</span> [sqrt(std(subtract(ts[lag:], ts[:<span style="color: #666666">-</span>lag]))) <span style="color: #AA22FF; font-weight: bold">for</span> lag <span style="color: #AA22FF; font-weight: bold">in</span> lags] <span style="color: #008800; font-style: italic"># variance</span>
+    m <span style="color: #666666">=</span> polyfit(log(lags), log(tau), <span style="color: #666666">1</span>) <span style="color: #008800; font-style: italic"># polynomial fit</span>
+    <span style="color: #AA22FF; font-weight: bold">return</span> m[<span style="color: #666666">0</span>] <span style="color: #666666">*</span> <span style="color: #666666">2</span> <span style="color: #008800; font-style: italic"># return exponent</span>
+
+<span style="color: #AA22FF">print</span>(<span style="color: #BB4444">&quot;hurst(XAU-XAUT): {0}&quot;</span><span style="color: #666666">.</span>format(hurst(data[<span style="color: #BB4444">&#39;spread_xauxaut&#39;</span>]<span style="color: #666666">.</span>values)))
+<span style="color: #AA22FF">print</span>(<span style="color: #BB4444">&quot;hurst(XAU-PAXG): {0}&quot;</span><span style="color: #666666">.</span>format(hurst(data[<span style="color: #BB4444">&#39;spread_xaupaxg&#39;</span>]<span style="color: #666666">.</span>values)))
+<span style="color: #AA22FF">print</span>(<span style="color: #BB4444">&quot;hurst(XAUT-PAXG): {0}&quot;</span><span style="color: #666666">.</span>format(hurst(data[<span style="color: #BB4444">&#39;spread_xautpaxg&#39;</span>]<span style="color: #666666">.</span>values)))
+</pre></td></tr></table></div>
+<div class="caption">
+hurst(XAU-XAUT): 0.02211187342168529<br>
+hurst(XAU-PAXG): 0.1254107697763245<br>
+hurst(XAUT-PAXG): 0.11409796976657859<br>
+</div>
+
+<p>Nice.</p>
+</div></body></html>
