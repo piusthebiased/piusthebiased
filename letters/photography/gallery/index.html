@@ -1,0 +1,201 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- search meta -->
+    <title>Pius Lee - Photography Portfolio</title>
+    <meta name="description" content="Notes and Letters with respect to my self studies.">
+    <link rel="canonical" href="https://plee.app/letters">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer src="/_vercel/insights/script.js"></script>
+    
+    <!-- page styling -->
+    <style>
+      a { 
+        color: black;
+      }
+
+      body { 
+        line-height: 1.4;
+        font-size: 16px;
+        padding: 0 10px;
+        margin: 50px auto;
+        max-width: 800px;
+        font-family: monospace;
+      }
+  
+      #maincontent {
+        max-width:50em;margin:15 auto;
+        font-family: monospace;
+      }
+
+      ::selection {
+        background-color: black;
+        color: white;
+      }
+
+      ::-moz-selection {
+        background-color: black;
+        color: white;
+      }
+
+      .image-container {
+        text-align: center; /* Centers content */
+        margin-top: 5px; /* Adds spacing from top */
+      }
+
+      .image-container img {
+        max-width: 100%; /* Ensures responsiveness */
+        height: auto;
+      }
+
+      .caption {
+        margin-top: 5px;
+        font-size: 16px;
+        color: #333; /* Dark gray for readability */
+        font-style: italic;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .wrapper {
+        overflow: hidden;
+        height: 100vh;
+        display: grid;
+        grid-template-rows: 2fr 1fr;
+        grid-gap: 10px;
+      }
+      @media screen and (min-width: 1200px) {
+        .wrapper {
+          grid-template-columns: 1fr 5fr;
+          grid-template-rows: auto;
+        }
+      }
+
+      .gallery {
+        overflow-x: scroll;
+        overflow-y: hidden;
+        -ms-scroll-snap-type: x mandatory;
+            scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        display: flex;
+      }
+      @media screen and (min-width: 1200px) {
+        .gallery {
+          display: block;
+          overflow-y: scroll;
+          overflow-x: hidden;
+          -ms-scroll-snap-type: y mandatory;
+              scroll-snap-type: y mandatory;
+        }
+      }
+
+      .gallery__img {
+        scroll-snap-align: start;
+        margin-bottom: 10px;
+        min-width: 100vw;
+        -o-object-fit: cover;
+          object-fit: cover;
+      }
+      @media screen and (min-width: 1200px) {
+        .gallery__img {
+          min-width: auto;
+          min-height: 100vh;
+        }
+      }
+
+      .lil-nav {
+        overflow-x: scroll;
+        overflow-y: hidden;
+        display: flex;
+        grid-row-start: 2;
+      }
+      @media screen and (min-width: 1200px) {
+        .lil-nav {
+          overflow-y: scroll;
+          overflow-x: hidden;
+          display: block;
+          grid-row-start: auto;
+        }
+      }
+      .lil-nav a {
+        display: flex;
+        min-width: 45vw;
+        margin-right: 10px;
+      }
+      @media screen and (min-width: 1200px) {
+        .lil-nav a {
+          margin-bottom: 10px;
+          min-height: 200px;
+          min-width: 100%;
+        }
+      }
+
+      .lil-nav__img {
+        -o-object-fit: cover;
+          object-fit: cover;
+        filter: saturate(0);
+        transition: 0.3s ease all;
+      }
+      .lil-nav__img:hover {
+        transform: scale(1.05);
+        filter: saturate(1);
+      }
+    </style>
+  </head>
+  
+  <body><div id="maincontent" style="margin-top:70px">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1em;">
+        <h2 style="margin-bottom: 0; font-size: 22px"><a href="https://piusthebiased.vercel.app/letters/photography/">Pius Lee - Photography Portfolio</a></h2>
+        <p style="margin-bottom: 5;">
+            <a href="https://piusthebiased.vercel.app/letters/photography/about">About/Contact</a> |
+            <a href="https://piusthebiased.vercel.app/letters/photography/gallery">Gallery</a>
+        </p>
+    </div>
+
+    <div class="wrapper">
+      <nav class="lil-nav">
+        <a href="#image-1">
+          <img class="lil-nav__img" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/kenan-sulayman-FV3M7igu8Fs-unsplash.jpg" alt="Yosemite" />
+        </a>
+        <a href="#image-2">
+          <img class="lil-nav__img" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/anastasia-dulgier-NCFTGtjY3EQ-unsplash.jpg" alt="Houses" />
+        </a>
+        <a href="#image-3">
+          <img class="lil-nav__img" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/arnaud-mariat-IPXcUYHeErc-unsplash.jpg" alt="Galaxies" />
+        </a>
+        <a href="#image-4">
+          <img class="lil-nav__img" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/matthew-smith-9CV6WrxxdrM-unsplash.jpg" alt="Motel" />
+        </a>
+        <a href="#image-5">
+          <img class="lil-nav__img" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/vladimir-kondriianenko-bxwzcFy9YwM-unsplash.jpg" alt="Minimalist nightmare" />
+        </a>
+        <a href="#image-6">
+          <img class="lil-nav__img" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/jakob-owens-EkxOtUljwhs-unsplash.jpg" alt="Hoops" />
+        </a>
+        <a href="#image-7">
+          <img class="lil-nav__img" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/tim-bogdanov-4uojMEdcwI8-unsplash.jpg" alt="Gentleman" />
+        </a>
+        <a href="#image-8">
+          <img class="lil-nav__img" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/weston-mackinnon-caUtk0DTiR0-unsplash.jpg" alt="Stuff" />
+        </a>
+      </nav>
+    
+      <div class="gallery">
+        <img class="gallery__img" id="image-1" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/kenan-sulayman-FV3M7igu8Fs-unsplash.jpg" alt="Yosemite" />
+        <img class="gallery__img" id="image-2" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/anastasia-dulgier-NCFTGtjY3EQ-unsplash.jpg" alt="Houses" />
+        <img class="gallery__img" id="image-3" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/arnaud-mariat-IPXcUYHeErc-unsplash.jpg" alt="Galaxies" />
+        <img class="gallery__img" id="image-4" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/matthew-smith-9CV6WrxxdrM-unsplash.jpg" alt="Motel" />
+        <img class="gallery__img" id="image-5" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/vladimir-kondriianenko-bxwzcFy9YwM-unsplash.jpg" alt="Minimalist nightmare" />
+        <img class="gallery__img" id="image-6" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/jakob-owens-EkxOtUljwhs-unsplash.jpg" alt="Hoops" />
+        <img class="gallery__img" id="image-7" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/tim-bogdanov-4uojMEdcwI8-unsplash.jpg" alt="Gentleman" />
+        <img class="gallery__img" id="image-8" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/weston-mackinnon-caUtk0DTiR0-unsplash.jpg" alt="Stuff" />
+      </div>
+    </div>
+  </div>
+</body>
+
+<footer style="text-align: center; margin-top: 20px; font-size: 0.9em; color: gray;">
+<hr><p>All images are released under <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank">CC0 (Public Domain)</a>. Pius Lee - CC0 2025.</p>
+</footer>
+</html>
