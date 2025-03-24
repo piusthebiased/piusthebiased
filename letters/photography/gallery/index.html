@@ -25,6 +25,7 @@
         max-width: 50em;
         margin: 15px auto;
         font-family: monospace;
+        transition: filter 0.3s ease; /* Smooth blur transition */
       }
 
       ::selection {
@@ -41,14 +42,14 @@
         display: flex;
         flex-wrap: wrap;
         padding: 0 4px;
-        justify-content: space-between; /* Ensures columns spread out */
+        justify-content: space-between;
       }
 
       .column {
-        flex: 0 0 49.7%; /* Adjusted for two columns with some spacing */
-        max-width: 49.7%; /* Prevents overflow */
+        flex: 0 0 49.7%;
+        max-width: 49.7%;
         padding: 0 4px;
-        box-sizing: border-box; /* Includes padding in width calculation */
+        box-sizing: border-box;
       }
 
       .column img {
@@ -56,6 +57,62 @@
         vertical-align: middle;
         width: 100%;
         height: auto;
+        cursor: pointer;
+      }
+
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7); /* Slightly lighter overlay */
+        justify-content: center;
+        align-items: center;
+        opacity: 0; /* Start invisible for fade-in */
+        transition: opacity 0.3s ease; /* Fade transition */
+      }
+
+      .modal.show {
+        display: flex; /* Show when active */
+        opacity: 1; /* Fully visible */
+      }
+
+      .modal-content {
+        max-width: 90%;
+        max-height: 90vh;
+        margin: auto;
+        display: block;
+        transform: scale(0.9); /* Start slightly smaller */
+        transition: transform 0.3s ease; /* Scale transition */
+      }
+
+      .modal.show .modal-content {
+        transform: scale(1); /* Full size when shown */
+      }
+
+      .close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s ease; /* Smooth color change */
+      }
+
+      .close:hover,
+      .close:focus {
+        color: #bbb;
+      }
+
+      /* Brighter blur effect */
+      body.modal-open #maincontent {
+        filter: blur(5px) brightness(90%); /* Slightly brighter blur */
       }
     </style>
 </head>
@@ -72,24 +129,69 @@
     <div id="maincontent" style="margin-top:24px">
       <div class="row">
         <div class="column">
-          <img src="https://piusthebiased.vercel.app/letters/photography/gallery/fig1.jpg" alt="Image 1">
-          <img src="https://piusthebiased.vercel.app/letters/photography/gallery/fig2.jpg" alt="Image 2">
-          <img src="https://piusthebiased.vercel.app/letters/photography/gallery/fig3.jpg" alt="Image 3">
-          <img src="https://piusthebiased.vercel.app/letters/photography/gallery/fig4.png" alt="Image 4">
-          <img src="https://piusthebiased.vercel.app/letters/photography/gallery/fig7.jpg" alt="Image 5">
+          <img src="fig1.jpg" alt="Image 1">
+          <img src="fig2.jpg" alt="Image 2">
+          <img src="fig3.jpg" alt="Image 3">
+          <img src="fig4.png" alt="Image 4">
+          <img src="fig5.jpg" alt="Image 5">
         </div>
         <div class="column">
-          <img src="https://piusthebiased.vercel.app/letters/photography/gallery/fig5.jpg" alt="Image 6">
-          <img src="https://piusthebiased.vercel.app/letters/photography/gallery/fig6.jpg" alt="Image 7">
-          <img src="https://piusthebiased.vercel.app/letters/photography/gallery/fig8.png" alt="Image 8">
-          <img src="https://piusthebiased.vercel.app/letters/photography/gallery/fig9.png" alt="Image 9">
-          <img src="https://piusthebiased.vercel.app/letters/photography/gallery/fig10.jpg" alt="Image 10">
+          <img src="fig6.jpg" alt="Image 6">
+          <img src="fig7.jpg" alt="Image 7">
+          <img src="fig8.png" alt="Image 8">
+          <img src="fig9.png" alt="Image 9">
+          <img src="fig10.jpg" alt="Image 10">
         </div>
       </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="imageModal" class="modal">
+      <span class="close">×</span>
+      <img class="modal-content" id="modalImage">
     </div>
 
     <footer style="text-align: center; margin-top: 20px; font-size: 0.9em; color: gray;">
       <hr><p>All images are released under <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank">CC0 (Public Domain)</a>. Pius Lee - CC0 2025.</p>
     </footer>
+
+    <script>
+      // Get modal elements
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      const closeBtn = document.getElementsByClassName('close')[0];
+      const images = document.querySelectorAll('.column img');
+      const body = document.body;
+
+      // Add click event to all images
+      images.forEach(img => {
+        img.onclick = function() {
+          modal.style.display = 'flex'; // Ensure it's visible
+          modalImg.src = this.src; // Set modal image source
+          setTimeout(() => modal.classList.add('show'), 10); // Add 'show' class after a tiny delay for transition
+          body.classList.add('modal-open'); // Blur background
+        }
+      });
+
+      // Close modal when clicking the X
+      closeBtn.onclick = function() {
+        modal.classList.remove('show'); // Fade out
+        setTimeout(() => {
+          modal.style.display = 'none'; // Hide after transition
+          body.classList.remove('modal-open'); // Remove blur
+        }, 300); // Match transition duration (0.3s)
+      }
+
+      // Close modal when clicking outside the image
+      modal.onclick = function(event) {
+        if (event.target === modal) {
+          modal.classList.remove('show'); // Fade out
+          setTimeout(() => {
+            modal.style.display = 'none';
+            body.classList.remove('modal-open');
+          }, 300); // Match transition duration
+        }
+      }
+    </script>
 </body>
 </html>
