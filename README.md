@@ -1,5 +1,5 @@
 ## Hi there, I'm Pius 👋
-Hey, I'm Pius. I'm 17 years old. This account contains work that I've created over a series of years.
+Hey, I'm Pius. I'm 18 years old. This account contains work that I've created over a series of years.
 
 <!--- 
 Congratulations. You've found a secret section in my about me! As a reward for being so nosy, here's a treat.
